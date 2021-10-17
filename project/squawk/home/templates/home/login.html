@@ -1,6 +1,7 @@
 <!--This is simple code creating a home page that links to a registration page does not really
 do anything just practicing html and css-->
 
+{% load static %}
 
 <!doctype html>
 <html>
@@ -11,7 +12,7 @@ do anything just practicing html and css-->
 
         <title>Squawk.com/Homepage</title>
        
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'home/style.css'%}">
 
     </head>
 
@@ -36,7 +37,7 @@ do anything just practicing html and css-->
                 
                 <p class = "form__text">
                        
-                       <a href = "registration.html"  class = "form__link">Create Account</a>
+                       <a href = "{% url 'registration' %}"  class = "form__link">Create Account</a>
                 </p>
                  
             </form>

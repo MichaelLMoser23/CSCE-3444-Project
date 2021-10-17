@@ -1,13 +1,46 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+<!doctype html>
+<html>
 
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+    <head>
+      
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+
+        <title>Squawk.com/Homepage</title>
+       
+        <link rel="stylesheet" type="text/css" href="{% static 'home/style.css'%}">
+
+    </head>
+
+
+    <body>
+       
+       <div class ="container">
+            <form class = "form" id = "login">
+                <h1 class = "form__title">Login</h1>
+                <div class = "form__message form__message--error"></div>
+                    <div class = "form__input-group">
+                        <input type = "text" class = "form__input" autofocus placeholder = "Email">
+                            <div class = "form__input-error-message"></div>
+                    </div>
+
+                    <div class = "form__input-group">
+                        <input type = "text" class = "form__input" autofocus placeholder = "Password">
+                            <div class = "form__input-error-message"></div>
+                    </div>
+
+                    <button class = "form__button" type = "submit">Submit</button>
+                
+                <p class = "form__text">
+                       
+                       <a href = "{% url 'registration' %}"  class = "form__link">Create Account</a>
+                </p>
+                 
+            </form>
+        </div>
+
+
+    </body>
+
+</html>

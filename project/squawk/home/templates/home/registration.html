@@ -1,10 +1,11 @@
+{% load static %}
 <!doctype html>
 <html>
 
     <head>
         <title>Squawk.com/Registration</title>
         
-        <link href="style.css" rel="stylesheet" type="text/css"/>
+        <link href="{% static 'home/style.css'%}" rel="stylesheet" type="text/css"/>
 
     </head>
 
@@ -12,7 +13,7 @@
     <body>
        
         <div class ="container">
-             <form class = "form" id = "Registration">
+             <form class = "form" id = "registration">
                  <h1 class = "form__title">Registration</h1>
                  <div class = "form__message form__message--error"></div>
                      <div class = "form__input-group">
@@ -34,7 +35,7 @@
  
                      <p class = "form__text">
                        
-                        <a href = "home.html"  class = "form__link">Login</a>
+                        <a href = "{% url 'login' %}"  class = "form__link">Login</a>
                  </p>
 
              </form>
