@@ -1,0 +1,12 @@
+.home_bg {
+    background-image: url(./background.jpg);
+    background-size: 100%;
+}
+
+.form__link{
+
+    color:rgb(5, 144, 51);
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
