@@ -1,4 +1,5 @@
 {% load static %}
+
 <!doctype html>
 <html>
 
@@ -11,11 +12,17 @@
 
 
     <body>
-       
         <div class ="container">
              <form class = "form" id = "registration">
+                {% csrf_token %}
+                {{ form }}
                  <h1 class = "form__title">Registration</h1>
                  <div class = "form__message form__message--error"></div>
+                    <div class = "form__input-group">
+                        <input type = "text" class = "form__input" autofocus placeholder = "Username">
+                            <div class = "form__input-error-message"></div>
+                    </div>
+
                      <div class = "form__input-group">
                          <input type = "text" class = "form__input" autofocus placeholder = "Email">
                              <div class = "form__input-error-message"></div>
@@ -31,12 +38,14 @@
                             <div class = "form__input-error-message"></div>
                     </div>
 
-                     <button class = "form__button" type = "submit">Submit</button>
+                     <button class = "form__button" type = "submit">Register</button>
  
-                     <p class = "form__text">
-                       
-                        <a href = "{% url 'login' %}"  class = "form__link">Login</a>
-                 </p>
+                    <p class = "form__text">
+                        <a href = "{% url 'login' %}"  class = "form__link">Already have an account? Login here.</a>
+                    </p>
+                    <p class = "form__text">
+                        <a href = "{% url 'index' %}"  class = "form__link">Return to Homepage</a>
+                    </p>
 
              </form>
         </div>
