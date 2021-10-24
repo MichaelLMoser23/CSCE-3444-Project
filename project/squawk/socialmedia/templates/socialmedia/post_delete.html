@@ -1,0 +1,29 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<div class="container">
+        <div class="row mt-5">
+            <div class="col-md-5 col-sm-6">
+                <a href="{% url 'post-detail' object.pk %}" class="btn btn-light"><i class="fas fa-arrow-left"></i> Go Back</a>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12 border-bottom">
+                <p><strong>{{ post.author }}</strong> {{ post.date_posted }}</p>
+                <p>{{ post.body }}</p>
+            </div>
+        </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12">
+            <form method="POST">
+                {% csrf_token %}
+                <h5>Are you sure you want to delete?</h5>
+                <p>This change cannot be undone.</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-danger mt-3 mb-5">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
