@@ -1,31 +1,33 @@
 {% load static %}
 
-        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
-        <title>Squawk.com/login</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'home/style.css'%}">
+<link href="{% static 'home/signin.css' %}" rel="stylesheet">
 
-        <div class ="container">
+    <body class="text-center">
+        <main class="form-signin">
             <form action="" method=POST>
                 {% csrf_token %}
-                <h1 class = "form__title">Login</h1>
+                <h1 class="h3 mb-3 fw-normal">Login</h1>
                 <div class = "form__message form__message--error"></div>
-                    <div class = "form__input-group">
-                        <input type = "text" class = "form__input" name = "username" autofocus placeholder = "Username">
-                            <div class = "form__input-error-message"></div>
-                    </div>
+                <a href = "{% url 'registration' %}"  class = "form__link">Don't have an account? Sign up.</a>
 
-                    <div class = "form__input-group">
-                        <input type = "password" class = "form__input" name = "password" autofocus placeholder = "Password">
-                            <div class = "form__input-error-message"></div>
-                    </div>
-
-                    <button class = "form__button" type = "submit">Submit</button>
-                
-                <p class = "form__text">
-                       
-                       <a href = "{% url 'registration' %}"  class = "form__link">Don't have an account? Sign up.</a>
-                </p>
-                 
+                <div class="form-floating">
+                  <input type="username" class="form-control" id="floatingInput" placeholder="Username">
+                  <label for="floatingInput">Username</label>
+                  <div class = "form__input-error-message"></div>
+                </div>
+                <div class="form-floating">
+                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                  <label for="floatingPassword">Password</label>
+                  <div class = "form__input-error-message"></div>
+                </div>
+            
+                <div class="checkbox mb-3">
+                  <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                  </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-success" type="submit">Sign in</button>
+                <a class="btn btn-link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
             </form>
-        </div>
-
+        </main>
+    </body>

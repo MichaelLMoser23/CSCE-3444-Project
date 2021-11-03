@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.urls.base import reverse
@@ -117,10 +117,25 @@ class UserProfileView(View):
         user = profile.user
         post = Post.objects.filter(author=user).order_by('-date_posted')
 
+        followers = profile.followers.all()
+        if len(followers) == 0:
+            is_following = False
+            
+        for follower in followers:
+            if follower == request.user:
+                is_following = True
+                break
+            else:
+                is_following = False
+
+        follower_count = len(followers)
+
         context = {
             'user' : user,
             'profile' : profile,
             'posts' : post,
+            'follower_count' : follower_count,
+            'is_following' : is_following,
         }
 
         return render(request, 'socialmedia\profile.html', context)
@@ -148,3 +163,17 @@ class UserSettingsView(View):
             'profile' : profile,
         }
         return render(request, 'socialmedia\\user_settings.html', context)
+
+class AddFollower(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        profile = UserProfile.objects.get(pk=pk)
+        profile.followers.add(request.user)
+
+        return redirect('profile', pk=profile.pk)
+
+class RemoveFollower(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        profile = UserProfile.objects.get(pk=pk)
+        profile.followers.remove(request.user)
+
+        return redirect('profile', pk=profile.pk)

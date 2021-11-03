@@ -26,6 +26,8 @@
           {% endif %}
           <!-- This is the navbar that is displayed to a user who is logged in -->
         {% if user.is_authenticated %}
+        {% if user != request.user %}
+        {% else %}
         <div class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
             <i class="fas fa-user"></i> {{ user.username }}
@@ -37,6 +39,7 @@
             <li><a class="dropdown-item" href="{% url 'profile-settings' user.profile.pk %}"><i class="fas fa-user-cog"></i> Settings</a></li>
             <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-running"></i> Log Out</a></li>
         </div>
+        {% endif %}
         {% endif %}
         </ul>
         <form class="d-flex">
