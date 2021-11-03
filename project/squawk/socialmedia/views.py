@@ -137,3 +137,14 @@ class EditProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         profile = self.get_object()
         return self.request.user == profile.user
+
+class UserSettingsView(View):
+    def get(self, request, pk):
+        profile = UserProfile.objects.get(pk=pk)
+        user = profile.user
+
+        context = {
+            'user' : user,
+            'profile' : profile,
+        }
+        return render(request, 'socialmedia\\user_settings.html', context)

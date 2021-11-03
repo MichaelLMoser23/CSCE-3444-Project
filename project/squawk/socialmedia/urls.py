@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CommentDeleteView, PostListView, PublicPostListView, PostDetailView, PostEditView, PostDeleteView, UserProfileView, EditProfileView
+from .views import CommentDeleteView, PostListView, PublicPostListView, PostDetailView, PostEditView, PostDeleteView, UserProfileView, EditProfileView, UserSettingsView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path('post/<int:post_pk>/comment/delete/<int:pk>/', CommentDeleteView.as_view(), name='comment-delete'),
     path('profile/<int:pk>/', UserProfileView.as_view(), name='profile'),
     path('profile/edit/<int:pk>/', EditProfileView.as_view(), name='profile-edit'),
+    path('profile/settings/<int:pk>/', UserSettingsView.as_view(), name='profile-settings'),
 ]
 
 if settings.DEBUG:
