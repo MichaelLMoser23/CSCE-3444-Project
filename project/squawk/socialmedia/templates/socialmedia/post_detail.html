@@ -3,9 +3,9 @@
 
 {% block content %}
 <div class="container">
-    <div class="row mt-5">
-        <div class="col-md-5 col-sm-6">
-            <a href="{% url 'post-list' %}" class="btn btn-light"><i class="fas fa-arrow-left"></i> Go Back</a>
+    <div class="row mt-2">
+        <div class="col-md-5 col-sm-5">
+            <a href="{% url 'post-list' %}" class="btn btn-dark"><i class="fas fa-arrow-left"></i> Go Back</a>
         </div>
     </div>
     <div class="row justify-content-center mt-3">
@@ -29,6 +29,13 @@
                     <button class="btn btn-success mt-3 mb-5">Submit</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-5 col-sm-5">
+            <h3> Comments </h3>
+            <div class="col-md-15 col-sm-12 border-bottom">
+            </div>
         </div>
     </div>
     {% for comment in comments %}

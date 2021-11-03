@@ -1,0 +1,59 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
+            <img src = "{{ profile.picture.url }}" class = "rounded-circle" width="100" height="100" />
+            {% if profile.name %}
+            <h3>{{ profile.name }}</h3>
+            
+            <h5> <p style="color:rgb(165, 166, 168)">@{{ user.username }} </p>
+                <span>
+                    {% if request.user == user %}
+                        <a href="{% url 'profile-edit' profile.pk %}" style="color: #333"><i class="far fa-edit"></i> Edit Profile</a>
+                    {% endif %}
+                </span>
+            {% else %}
+            <h3><p style="color:rgb(165, 166, 168)">@{{ user.username }}</p></h3>
+                <span>
+                    {% if request.user == user %}
+                        <a href="{% url 'profile-edit' profile.pk %}" style="color: #333"><i class="far fa-edit"></i> Edit Profile</a>
+                    {% endif %}
+                </span>
+            {% endif %}
+            </h5>
+            {% if profile.major %}
+            <h5> <i class="fas fa-graduation-cap"></i> Major</h5>
+            <p> {{ profile.major }} </p>
+            {% endif %}
+            {% if profile.birth_date %}
+            <h5> <i class="fas fa-birthday-cake"></i> Birthday</h5>
+            <p> {{ profile.birth_date }} </p>
+            {% endif %}
+            {% if profile.bio %}
+            <h5> <i class="fas fa-address-card"></i> About me</h5>
+            <p> {{ profile.bio }} </p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- TO DO: format to fit page more cleanly
+    <div class="row mb-4">
+        <div class="col-md-5 col-sm-5">
+            <h3> Your Posts </h3>
+            <div class="col-md-15 col-sm-12 border-bottom">
+            </div>
+        </div>
+    </div>
+    -->
+    {% for post in posts %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 border-bottom position-relative">
+            <p><strong>{{ post.author }}</strong> {{ post.date_posted }}</p>
+            <p>{{ post.body }}</p>
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

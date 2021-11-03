@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.urls.base import reverse
 from django.views import View
-from .models import Post, Comment
+from .models import Post, Comment, UserProfile
 from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
 
@@ -33,6 +33,15 @@ class PostListView(LoginRequiredMixin, View):
             'form': form,
         }
         return render(request, 'socialmedia\post_list.html', context)
+
+class PublicPostListView(View):
+    def get(self, request):
+        posts = Post.objects.all().order_by('-date_posted')
+
+        context = {
+            'post_list': posts,
+        }
+        return render(request, 'socialmedia\public_post_list.html', context)
 
 class PostDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
@@ -101,3 +110,30 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+class UserProfileView(View):
+    def get(self, request, pk):
+        profile = UserProfile.objects.get(pk=pk)
+        user = profile.user
+        post = Post.objects.filter(author=user).order_by('-date_posted')
+
+        context = {
+            'user' : user,
+            'profile' : profile,
+            'posts' : post,
+        }
+
+        return render(request, 'socialmedia\profile.html', context)
+
+class EditProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = UserProfile
+    fields = ['name', 'major', 'bio', 'birth_date', 'picture']
+    template_name = 'socialmedia\profile_edit.html'
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('profile', kwargs={'pk': pk})
+
+    def test_func(self):
+        profile = self.get_object()
+        return self.request.user == profile.user
