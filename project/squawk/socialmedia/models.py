@@ -22,14 +22,11 @@ class UserProfile(models.Model):
     major = models.CharField(max_length = 20, blank=True, null=True)
     bio = models.TextField(max_length=150, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
-    picture = models.ImageField(upload_to='uploads/profile_pictures', default='uploads/profile_pictures/pfp_default.jpg', blank=True)
+    picture = models.ImageField(upload_to='uploads/profile_pictures', default='uploads/profile_pictures/pfp_default.png', blank=True)
     followers = models.ManyToManyField(User, blank=True, related_name='followers')
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+        instance.profile.save()

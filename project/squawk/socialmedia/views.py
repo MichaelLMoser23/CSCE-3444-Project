@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.urls.base import reverse
 from django.views import View
@@ -10,7 +11,8 @@ from django.views.generic.edit import UpdateView, DeleteView
 # Create your views here.
 class PostListView(LoginRequiredMixin, View):
     def get(self, request):
-        posts = Post.objects.all().order_by('-date_posted')
+        user = request.user
+        posts = Post.objects.filter(author__profile__followers__in=[user.id]).order_by('-date_posted')
         form = PostForm()
 
         context = {
@@ -34,14 +36,24 @@ class PostListView(LoginRequiredMixin, View):
         }
         return render(request, 'socialmedia\post_list.html', context)
 
-class PublicPostListView(View):
+# Explore page
+class ExploreView(View):
     def get(self, request):
         posts = Post.objects.all().order_by('-date_posted')
 
         context = {
             'post_list': posts,
         }
-        return render(request, 'socialmedia\public_post_list.html', context)
+        return render(request, 'socialmedia\explore.html', context)
+
+class TrendingView(View):
+    def get(self, request):
+        posts = Post.objects.all().order_by('-date_posted')
+
+        context = {
+            'post_list': posts,
+        }
+        return render(request, 'socialmedia\explore.html', context)
 
 class PostDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
@@ -177,3 +189,18 @@ class RemoveFollower(LoginRequiredMixin, View):
         profile.followers.remove(request.user)
 
         return redirect('profile', pk=profile.pk)
+
+# Search for user profiles
+class SearchView(LoginRequiredMixin, View):
+    def get(self, request):
+        search = self.request.GET.get('search')
+        profile_list = UserProfile.objects.filter(
+            Q(user__username__icontains=search)
+        )
+    
+        context = {
+            'profile_list': profile_list,
+            'search': search,
+        }
+
+        return render(request, 'socialmedia/search.html', context)

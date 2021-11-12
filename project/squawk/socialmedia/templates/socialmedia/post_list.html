@@ -22,7 +22,11 @@
     {% for post in post_list %}
     <div class="row justify-content-center mt-3">
         <div class="col-md-5 col-sm-12 border-bottom position-relative">
-            <p>{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
+            <div>
+                <a href="{% url 'profile' post.author.profile.pk %}"></a>
+                <img class="round-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
+                <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
+            </div>
             <div class="position-relative">
                 <p>{{ post.body }}</p>
                 <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>

@@ -1,0 +1,45 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+</style>
+<div class="container">
+    <div class="row justify-content-center mb-4">
+        <div class="mt-5 col-md-5 col-sm-5">
+            <h2> See what everyone is saying! </h2>
+            <div class="col-md-15 col-sm-12 border-bottom"></div>
+            <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">All</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Trending</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">News</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+              <!-- Show all posts -->
+              <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                {% for post in post_list %}
+                <div class="row justify-content-left mt-3">
+                    <div class="col col-sm-12 border-bottom border-muted position-relative">
+                        <p><strong>{{ post.author }}</strong> {{ post.date_posted }}</p>
+                        <p>{{ post.body }}</p>
+                        <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                    </div>
+                </div>
+                {% endfor %}
+              </div>
+              <!-- Show trending posts -->
+              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">This post is trending</div>
+              <!-- Show news feed -->
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Here is the latest news:</div>
+            </div>
+              <div class="col-md-15 col-sm-12 border-bottom"></div>
+        </div>
+    </div>
+    
+</div>
+{% endblock content %}

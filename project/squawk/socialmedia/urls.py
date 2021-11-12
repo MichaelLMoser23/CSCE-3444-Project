@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import CommentDeleteView, PostListView, PublicPostListView, PostDetailView, PostEditView, PostDeleteView, UserProfileView, EditProfileView, UserSettingsView, AddFollower, RemoveFollower
-from django.conf import settings
+from .views import CommentDeleteView, PostListView, ExploreView, SearchView, TrendingView, PostDetailView, PostEditView, PostDeleteView, UserProfileView, EditProfileView, UserSettingsView, AddFollower, RemoveFollower
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('', PostListView.as_view(), name='post-list'),
-    path('explore', PublicPostListView.as_view(), name='public-post-list'),
+    path('explore/', ExploreView.as_view(), name='explore'),
+    path('trending/', TrendingView.as_view(), name='trending'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/edit/<int:pk>/', PostEditView.as_view(), name='post-edit'),
     path('post/delete/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
@@ -15,8 +15,7 @@ urlpatterns = [
     path('profile/settings/<int:pk>/', UserSettingsView.as_view(), name='profile-settings'),
     path('profile/<int:pk>/followers/add', AddFollower.as_view(), name='add-follower'),
     path('profile/<int:pk>/followers/remove', RemoveFollower.as_view(), name='remove-follower'),
+    path('search/', SearchView.as_view(), name='search'),
     
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,40 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mb-4">
+        <div class="mt-5 col-md-5 col-sm-5">
+            <h2> See what everyone is saying! </h2>
+            <div class="col-md-15 col-sm-12 border-bottom"></div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'explore' %}">General</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'trending' %}">General</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">News</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Sports</a>
+                </li>
+              </ul>
+              <div class="col-md-15 col-sm-12 border-bottom"></div>
+        </div>
+    </div>
+    <!-- Show the most liked posts as trending posts
+    {% for post in post_list %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom position-relative">
+            <p><strong>{{ post.author }}</strong> {{ post.date_posted }}</p>
+            <p>{{ post.body }}</p>
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+        </div>
+    </div>
+    {% endfor %}
+    -->
+</div>
+{% endblock content %}
