@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="row justify-content-center mt-3">
-        <div class="col-md-5 col-sm-12 border-bottom">
+        <div class="col-md-5 col-sm-12">
             <form method="POST">
                 {% csrf_token %}
                 {{ form | crispy }}
@@ -19,20 +19,57 @@
             </form>
         </div>
     </div>
-    {% for post in post_list %}
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-5 col-sm-12 border-bottom position-relative">
-            <div>
-                <a href="{% url 'profile' post.author.profile.pk %}"></a>
-                <img class="round-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
-                <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
-            </div>
-            <div class="position-relative">
-                <p>{{ post.body }}</p>
-                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+    <div class="profile-page tx-13">
+        <div class="row profile-body">
+            <div class="col-md-8 col-xl-6 middle-wrapper">
+                <div class="row">
+                    {% for post in allposts  %}
+                            <div class="col-md-12 grid-margin">
+                                <div class="card rounded">
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                                <div class="ml-2">
+                                                    <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
+                                                    <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="position-relative">
+                                            <p class="mb-3 tx-14">{{ post.body }}</p>
+                                            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="d-flex post-actions">
+                                            <div>
+                                                <i class="fas fa-comment-dots"></i>
+                                                {{ post.comments.count }}
+                                            </div> 
+                                            <form method="POST" action="{% url 'like' post.pk %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                            <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                            <!-- Show different like icon depending on if the user liked or not -->
+                                            {% if is_like == true %}
+                                            <i class="fas fa-heart" style="color: #a83f39"></i>
+                                            {% else %}
+                                            <i class="far fa-heart" style="color: #a83f39"></i>
+                                            {% endif %}
+                                            <span>{{ post.likes.all.count }}</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
 {% endblock content %}

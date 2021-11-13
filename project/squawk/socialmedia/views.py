@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.urls import reverse_lazy
 from django.urls.base import reverse
+from django.http import HttpResponseRedirect
 from django.views import View
 from .models import Post, Comment, UserProfile
 from .forms import PostForm, CommentForm
@@ -13,16 +14,27 @@ class PostListView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
         posts = Post.objects.filter(author__profile__followers__in=[user.id]).order_by('-date_posted')
+        allposts = Post.objects.all().order_by('-date_posted')
+        trendingposts = Post.objects.annotate(like_count=Count('likes')).order_by('-like_count')[:10]
+        
+        comments = Comment.objects.all().order_by('-date_posted')
+
         form = PostForm()
 
         context = {
             'post_list': posts,
             'form': form,
+            'allposts': allposts,
+            'trendingposts': trendingposts,
+            'comments': comments,
         }
         return render(request, 'socialmedia\post_list.html', context)
 
     def post(self, request):
-        posts = Post.objects.all().order_by('-date_posted')
+        user = request.user
+        posts = Post.objects.filter(author__profile__followers__in=[user.id]).order_by('-date_posted')
+        allposts = Post.objects.all().order_by('-date_posted')
+        trendingposts = Post.objects.all().order_by('-likes')[:3]
         form = PostForm(request.POST)
 
         if form.is_valid():
@@ -33,6 +45,8 @@ class PostListView(LoginRequiredMixin, View):
         context = {
             'post_list': posts,
             'form': form,
+            'allposts': allposts,
+            'trendingposts': trendingposts,
         }
         return render(request, 'socialmedia\post_list.html', context)
 
@@ -40,18 +54,13 @@ class PostListView(LoginRequiredMixin, View):
 class ExploreView(View):
     def get(self, request):
         posts = Post.objects.all().order_by('-date_posted')
+        trending_posts = Post.objects.annotate(like_count=Count('likes')).order_by('-like_count')[:10]
+        comments = Comment.objects.all().order_by('-date_posted')
 
         context = {
             'post_list': posts,
-        }
-        return render(request, 'socialmedia\explore.html', context)
-
-class TrendingView(View):
-    def get(self, request):
-        posts = Post.objects.all().order_by('-date_posted')
-
-        context = {
-            'post_list': posts,
+            'trending_posts': trending_posts,
+            'comments': comments,
         }
         return render(request, 'socialmedia\explore.html', context)
 
@@ -154,7 +163,7 @@ class UserProfileView(View):
 
 class EditProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = UserProfile
-    fields = ['name', 'major', 'bio', 'birth_date', 'picture']
+    fields = ['name', 'major', 'location', 'hobbies', 'bio', 'birth_date', 'picture']
     template_name = 'socialmedia\profile_edit.html'
 
     def get_success_url(self):
@@ -175,6 +184,20 @@ class UserSettingsView(View):
             'profile' : profile,
         }
         return render(request, 'socialmedia\\user_settings.html', context)
+
+class FollowersView(View):
+    def get(self, request, pk):
+        profile = UserProfile.objects.get(pk=pk)
+        user = profile.user
+        followers = profile.followers.all()
+
+        context = {
+            'profile': profile,
+            'user' : user,
+            'followers': followers,
+        }
+
+        return render(request, 'socialmedia/followers.html', context)
 
 class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk):
@@ -204,3 +227,28 @@ class SearchView(LoginRequiredMixin, View):
         }
 
         return render(request, 'socialmedia/search.html', context)
+
+# Likes
+class LikePost(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        is_like = False
+        fill = "fas"
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like: 
+            post.likes.add(request.user)
+        
+        if is_like:
+            post.likes.remove(request.user)
+        
+        context = {
+            'fill': fill,
+        }
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next, context)

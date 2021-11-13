@@ -1,0 +1,36 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'profile' profile.pk %}" class="btn btn-secondary">Back to Profile</a>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12">
+            {% if user == request.user %}
+            <h3>Your Followers</h5>
+            {% else %}
+            <h3>{{ profile.user.username }}'s Followers</h5>
+            {% endif %}
+        </div>
+    </div>
+    <div class="friend-list">
+        <div class="row mt-5">
+            {% for follower in followers %}
+            <div class="col-md-4 col-sm-6">
+              <div class="friend-card">
+                  <div class="card-info">
+                    <a href="{% url 'profile' follower.profile.pk %}"><img class="rounded-circle post-img" height="60" width="60" src="{{ follower.profile.picture.url }}" /></a>
+                  <div class="friend-info">
+                  	<h5><a href="{% url 'profile' follower.profile.pk %}" class="post-link">@{{ follower.username }}</a></h5>
+                  	<p>{{ follower.major }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

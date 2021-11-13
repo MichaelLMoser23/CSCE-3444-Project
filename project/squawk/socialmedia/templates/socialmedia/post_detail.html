@@ -12,12 +12,36 @@
         <div class="col-md-5 col-sm-12 border-bottom">
             <div>
                 <a href="{% url 'profile' post.author.profile.pk %}"></a>
-                <img class="round-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
+                <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
                 <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
             </div>
                 {% if request.user == post.author %}
                     <a href="{% url 'post-edit' post.pk %}" style="color: #333;"><i class="far fa-edit"></i> Edit</a>
                     <a href="{% url 'post-delete' post.pk %}" style="color: #333;"><i class="fas fa-trash"></i> Delete</a>
+                    <!--  Trigger  delete modal -->
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure you want to delete this post?</h5>
+                            </div>
+                            <div class="modal-body">
+                                {{ post.body }}
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form method="POST" action="{% url 'post-delete' post.pk %}">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn btn-danger" value="DELETE">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
                 {% endif %}
             <p>{{ post.body }}</p>
         </div>
@@ -36,7 +60,7 @@
     <div class="row justify-content-center mb-4">
         <div class="col-md-5 col-sm-5">
             <!-- If theres more than 1 comment just add an 's' at the end of comment -->
-            {% if comments.count > 1 %}
+            {% if comments.count != 1 %}
             <h3> {{ comments.count }} Comments </h3>
             {% else %}
             <h3> {{ comments.count }} Comment </h3>
@@ -50,7 +74,7 @@
         <div class="col-md-5 col-sm-12 border-bottom">
             <div>
                 <a href="{% url 'profile' comment.author.profile.pk %}"></a>
-                <img class="round-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
+                <img class="rounded-circle post-img" height="30" width="30" src="{{ comment.author.profile.picture.url }}"/>
                 <p class="post-text">{{ comment.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' comment.author.profile.pk %}">@{{ comment.author }}</a> {{ comment.date_posted }}</p>
             </div>
             {% if request.user == comment.author %}

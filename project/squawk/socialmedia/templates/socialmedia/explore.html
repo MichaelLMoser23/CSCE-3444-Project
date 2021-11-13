@@ -13,33 +13,104 @@
                 <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">All</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Trending</button>
+                <button class="nav-link" id="pills-trending-tab" data-bs-toggle="pill" data-bs-target="#pills-trending" type="button" role="tab" aria-controls="pills-trending" aria-selected="false">Trending</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">News</button>
+                <button class="nav-link disabled" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">News</button>
               </li>
             </ul>
-            <div class="tab-content" id="pills-tabContent">
+            <div class="tab-content" id="pills-tabContent" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
               <!-- Show all posts -->
               <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                 {% for post in post_list %}
                 <div class="row justify-content-left mt-3">
                     <div class="col col-sm-12 border-bottom border-muted position-relative">
-                        <p><strong>{{ post.author }}</strong> {{ post.date_posted }}</p>
-                        <p>{{ post.body }}</p>
-                        <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                      <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
+                      <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary">@{{ post.author }}</a> {{ post.date_posted }}</p>
+                      <!-- Button trigger modal -->
+                      <p>{{ post.body }}</p>
+                        <!-- Modal that pops up for users who aren't signed in yet -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Want to see more?</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
+                              </div>
+                              <div class="modal-footer">
+                                <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
+                                <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-row">
+                          <div>
+                            <i class="far fa-comment-dots"></i>
+                            {{ post.comments.count }}
+                            <i class="fas fa-heart" style="color: #a83f39"></i>
+                            <span>{{ post.likes.all.count }}</span>
+                          </div> 
+                      </div>
                     </div>
                 </div>
                 {% endfor %}
               </div>
               <!-- Show trending posts -->
-              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">This post is trending</div>
+              <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab" data-bs-toggle="modal" data-bs-target="#exampleModalCenter2">
+                {% for post in trending_posts %}
+                <div class="row justify-content-center mt-3">
+                    <div class="col-sm-12 border-bottom position-relative">
+                        <div>
+                            <a href="{% url 'profile' post.author.profile.pk %}"></a>
+                            <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
+                            <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary">@{{ post.author }}</a> {{ post.date_posted }}</p>
+                        </div>
+                        <div class="position-relative">
+                            <p>{{ post.body }}</p>
+                        </div>
+                        <!-- Modal that pops up for users who aren't signed in yet -->
+                        <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Want to see more?</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
+                              </div>
+                              <div class="modal-footer">
+                                <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
+                                <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-row">
+                            <div>
+                              <i class="far fa-comment-dots"></i>
+                              {{ post.comments.count }}
+                              <i class="fas fa-heart" style="color: #a83f39"></i>
+                              <span>{{ post.likes.all.count }}</span>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
               <!-- Show news feed -->
               <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Here is the latest news:</div>
             </div>
               <div class="col-md-15 col-sm-12 border-bottom"></div>
         </div>
     </div>
-    
 </div>
 {% endblock content %}

@@ -16,7 +16,7 @@
             <div class="col-md-5 col-sm-12 border-bottom position-relative">
                 <div>
                     <a href="{% url 'profile' profile.pk %}"></a>
-                    <img class="round-circle post-img" height="30" width="30" src="{{ profile.picture.url }}"/>
+                    <img class="rounded-circle post-img" height="30" width="30" src="{{ profile.picture.url }}"/>
                     <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a></p>
                 </div>
                 {% if profile.major %}
