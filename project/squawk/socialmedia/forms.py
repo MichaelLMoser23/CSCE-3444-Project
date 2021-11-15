@@ -7,7 +7,7 @@ class PostForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'rows': '3',
             'placeholder': 'What\'s happening?',
-            'maxlength': '200',
+            'maxlength': '500',
             'style': 'resize:none;',
         })
     )
