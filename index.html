@@ -1,0 +1,32 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- This is the background on the homepage
+    <div class="home_bg" style="height: 500px; padding-top: 150px;">
+    -->
+    <body>
+        <div class="container">
+            {% if user.is_authenticated %}
+            <div class="col-md-10 col-sm-12 text-center">
+                <h1 class="display-2 mt-3">Welcome {{ user.username }} </h1>
+                <p class="mt-3 lead">You have successfully logged in.</p>
+            </div>
+            {% else %}
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-10 col-sm-12 text-center">
+                    <h1 class="mt-5 display-2">Welcome to Squawk</h1>
+                    <p class="mt-3 lead">Connect with your friends, share your stories, and keep up to date on the latest news!</p>
+                    <div class="d-flex justify-content-center mt-5">
+                        <a href="{% url 'account_login' %}" class="btn btn-success mr-2">Login</a>
+                    </div>
+                    <a href="{% url 'account_signup' %}" class="form__link">Don't have an account? Sign up here.</a>
+                </div>
+            </div>
+            
+            {% endif %}
+        </div>
+    </body>
+<!--</div>-->
+{% endblock content %}
+
