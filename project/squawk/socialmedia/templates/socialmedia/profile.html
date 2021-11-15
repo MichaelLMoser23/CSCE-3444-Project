@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="row profile-body">
-            <!-- left wrapper start -->
+            <!-- left start -->
             <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
                 <div class="card rounded">
                     <div class="card-body">
@@ -79,67 +79,120 @@
                     </div>
                 </div>
             </div>
-            <!-- left wrapper end -->
-            <!-- middle wrapper start -->
+            <!-- left end -->
+            <!-- middle start -->
             <div class="col-md-8 col-xl-6 middle-wrapper">
                 <div class="row">
-                    {% for post in posts %}
                     <div class="col-md-12 grid-margin">
                         <div class="card rounded">
-                            <div class="card-header">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
-                                        <div class="ml-2">
-                                            <p>@{{ post.author }}</p>
-                                            <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                            <ul class="nav nav-pills nav-fill mt-1 mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                               <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">{{ posts.count }} Posts</button>
+                               </li>
+                               <li class="nav-item" role="presentation">
+                               <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Replies</button>
+                               </li>
+                               <li class="nav-item" role="presentation">
+                               <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Likes</button>
+                               </li>
+                                <li class="nav-item" role="media">
+                                    <button class="nav-link" id="pills-media-tab" data-bs-toggle="pill" data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media" aria-selected="false">Media</button>
+                               </li>
+                           </ul>
+                           <div class="tab-content" id="pills-tabContent">
+                               <!-- Show user posts -->
+                               <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                {% for post in posts %}
+                                <div class="col-md-12 grid-margin">
+                                    <div class="card rounded">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                                    <div class="ml-2">
+                                                        <p>@{{ post.author }}</p>
+                                                        <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="position-relative">
+                                                <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="d-flex post-actions">
+                                                <div>
+                                                    <i class="fas fa-comment-dots"></i>
+                                                    {{ post.comments.count }}
+                                                </div> 
+                                                <form method="POST" action="{% url 'like' post.pk %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                                        <!-- Show different like icon depending on if the user liked or not -->
+                                                        {% if is_like == true %}
+                                                        <i class="fas fa-heart" style="color: #a83f39"></i>
+                                                        {% else %}
+                                                        <i class="far fa-heart" style="color: #a83f39"></i>
+                                                        {% endif %}
+                                                        <span>{{ post.likes.all.count }}</span>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="position-relative">
-                                    <p class="mb-3 tx-14">{{ post.body }}</p>
-                                    <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex post-actions">
-                                    <div>
-                                        <i class="fas fa-comment-dots"></i>
-                                        {{ post.comments.count }}
-                                    </div> 
-                                    <form method="POST" action="{% url 'like' post.pk %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ request.path }}">
-                                        <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
-                                            <!-- Show different like icon depending on if the user liked or not -->
-                                            {% if is_like == true %}
-                                            <i class="fas fa-heart" style="color: #a83f39"></i>
-                                            {% else %}
-                                            <i class="far fa-heart" style="color: #a83f39"></i>
-                                            {% endif %}
-                                            <span>{{ post.likes.all.count }}</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                                {% endfor %}
+                               </div>
+                                <!-- Show user replies -->
+                               <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Replies</div>
+                               <!-- Show all the posts that the user liked -->
+                               <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Likes</div>
+                               <!-- Show media shared by user -->
+                               <div class="tab-pane fade" id="pills-media" role="tabpanel" aria-labelledby="pills-media-tab">Media</div>
+                           </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
-            <!-- middle wrapper end -->
-            <!-- right wrapper start -->
+            <!-- middle end -->
+            <!-- right start -->
             <div class="d-none d-xl-block col-xl-3 right-wrapper">
                 <div class="row">
                     <div class="col-md-12 grid-margin">
                         <div class="card rounded">
+                            <div class="card-body">
+                                {% if profile.name %}
+                                <h6 class="card-title">{{ profile.name }}'s Followers ({{ follower_count }})</h6>
+                                {% else %}
+                                <h6 class="card-title">{{ user.username }}'s Followers ({{ follower_count }})</h6>
+                                {% endif %}
+                                <div class="latest-photos">
+                                    <div class="row">
+                                        {% for follower in followers %}
+                                        <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                            <div class="d-flex align-items-center hover-pointer">
+                                                <img class="img-xs rounded-circle" src="{{ follower.profile.picture.url }}" alt="">
+                                                    <div class="ml-2">
+                                                        <h5><a href="{% url 'profile' follower.profile.pk %}" class="post-link">@{{ follower.username }}</a></h5>
+                                                        <p class="tx-11 text-muted">{{ follower.major }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>   
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- right wrapper end -->
+            <!-- right end -->
         </div>
     </div>
 </div>

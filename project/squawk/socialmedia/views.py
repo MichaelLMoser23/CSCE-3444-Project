@@ -157,6 +157,7 @@ class UserProfileView(View):
             'posts' : post,
             'follower_count' : follower_count,
             'is_following' : is_following,
+            'followers' : followers,
         }
 
         return render(request, 'socialmedia\profile.html', context)

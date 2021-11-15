@@ -5,7 +5,7 @@
 </style>
 <div class="container">
     <div class="row justify-content-center mb-4">
-        <div class="mt-5 col-md-5 col-sm-5">
+        <div class="mt-5 col-md-12">
             <h2> See what everyone is saying! </h2>
             <div class="col-md-15 col-sm-12 border-bottom"></div>
             <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
@@ -22,89 +22,125 @@
             <div class="tab-content" id="pills-tabContent" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
               <!-- Show all posts -->
               <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                {% for post in post_list %}
-                <div class="row justify-content-left mt-3">
-                    <div class="col col-sm-12 border-bottom border-muted position-relative">
-                      <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
-                      <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary">@{{ post.author }}</a> {{ post.date_posted }}</p>
-                      <!-- Button trigger modal -->
-                      <p>{{ post.body }}</p>
-                        <!-- Modal that pops up for users who aren't signed in yet -->
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Want to see more?</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
+                {% for post in post_list  %}
+                    <div class="row profile-body">
+                        <div class="col-md-8 col-xl-6 middle-wrapper">
+                            <div class="row">
+                              <div class="col-md-12 grid-margin">
+                                <div class="card rounded">
+                                  <div class="card-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                      <div class="d-flex align-items-center">
+                                        <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                          <div class="ml-2">
+                                            <p><a style="text-decoration: none" class="text-primary" href="">@{{ post.author }}</a></p>
+                                            <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="card-body">
+                                      <div class="position-relative">
+                                        <p class="mb-3 tx-14">{{ post.body }}</p>
+                                      </div>
+                                    </div>
+                                    <div class="card-footer">
+                                      <div class="d-flex post-actions">
+                                        <div>
+                                          <i class="fas fa-comment-dots"></i>
+                                            {{ post.comments.count }}
+                                            <i class="fas fa-heart" style="color: #a83f39"></i>
+                                            <span>{{ post.likes.all.count }}</span>
+                                          </div> 
+                                            </div>
+                                        </div>
+                                    </div>
                               </div>
-                              <div class="modal-body">
-                                Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
                               </div>
-                              <div class="modal-footer">
-                                <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
-                                <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
-                              </div>
-                            </div>
-                          </div>
                         </div>
-                        <div class="d-flex flex-row">
-                          <div>
-                            <i class="far fa-comment-dots"></i>
-                            {{ post.comments.count }}
-                            <i class="fas fa-heart" style="color: #a83f39"></i>
-                            <span>{{ post.likes.all.count }}</span>
-                          </div> 
+                    </div>
+                  {% endfor %}
+                <!-- Modal that pops up for users who aren't signed in yet -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Want to see more?</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
+                      </div>
+                      <div class="modal-footer">
+                        <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
                       </div>
                     </div>
+                  </div>
                 </div>
-                {% endfor %}
               </div>
               <!-- Show trending posts -->
               <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab" data-bs-toggle="modal" data-bs-target="#exampleModalCenter2">
                 {% for post in trending_posts %}
-                <div class="row justify-content-center mt-3">
-                    <div class="col-sm-12 border-bottom position-relative">
-                        <div>
-                            <a href="{% url 'profile' post.author.profile.pk %}"></a>
-                            <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
-                            <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary">@{{ post.author }}</a> {{ post.date_posted }}</p>
-                        </div>
-                        <div class="position-relative">
-                            <p>{{ post.body }}</p>
-                        </div>
-                        <!-- Modal that pops up for users who aren't signed in yet -->
-                        <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Want to see more?</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
+                <div class="row profile-body">
+                  <div class="col-md-8 col-xl-6 middle-wrapper">
+                      <div class="row">
+                        <div class="col-md-12 grid-margin">
+                          <div class="card rounded">
+                            <div class="card-header">
+                              <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                  <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                    <div class="ml-2">
+                                      <p><a style="text-decoration: none" class="text-primary">@{{ post.author }}</a></p>
+                                      <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                              <div class="modal-body">
-                                Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
+                              <div class="card-body">
+                                <div class="position-relative">
+                                  <p class="mb-3 tx-14">{{ post.body }}</p>
+                                </div>
                               </div>
-                              <div class="modal-footer">
-                                <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
-                                <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                              <div class="card-footer">
+                                <div class="d-flex post-actions">
+                                  <div>
+                                    <i class="fas fa-comment-dots"></i>
+                                      {{ post.comments.count }}
+                                      <i class="fas fa-heart" style="color: #a83f39"></i>
+                                      <span>{{ post.likes.all.count }}</span>
+                                    </div> 
+                                      </div>
+                                  </div>
                               </div>
-                            </div>
-                          </div>
                         </div>
-                        <div class="d-flex flex-row">
-                            <div>
-                              <i class="far fa-comment-dots"></i>
-                              {{ post.comments.count }}
-                              <i class="fas fa-heart" style="color: #a83f39"></i>
-                              <span>{{ post.likes.all.count }}</span>
-                            </div> 
                         </div>
-                    </div>
-                </div>
+                  </div>
+              </div>
                 {% endfor %}
+                <!-- Modal that pops up for users who aren't signed in yet -->
+                <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Want to see more?</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
+                      </div>
+                      <div class="modal-footer">
+                        <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
               <!-- Show news feed -->
               <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Here is the latest news:</div>

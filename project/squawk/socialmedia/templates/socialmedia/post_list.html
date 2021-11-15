@@ -32,9 +32,60 @@
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
                 <!-- Show all posts -->
-                {% for post in allposts  %}
+                <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+                    {% for post in allposts  %}
+                    <div class="row profile-body">
+                        <div class="col-md-8 col-xl-6 middle-wrapper">
+                                        <div class="col-md-12 grid-margin">
+                                            <div class="card rounded">
+                                                <div class="card-header">
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                                            <div class="ml-2">
+                                                                <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
+                                                                <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="position-relative">
+                                                        <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                        <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <div class="d-flex post-actions">
+                                                        <div>
+                                                            <i class="fas fa-comment-dots"></i>
+                                                            {{ post.comments.count }}
+                                                        </div> 
+                                                        <form method="POST" action="{% url 'like' post.pk %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                                        <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                                        <!-- Show different like icon depending on if the user liked or not -->
+                                                        {% if is_like == true %}
+                                                        <i class="fas fa-heart" style="color: #a83f39"></i>
+                                                        {% else %}
+                                                        <i class="far fa-heart" style="color: #a83f39"></i>
+                                                        {% endif %}
+                                                        <span>{{ post.likes.all.count }}</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Only show posts from the user's followers -->
+                <div class="tab-pane fade" id="pills-foryou" role="tabpanel" aria-labelledby="pills-foryou-tab">
+                    {% for post in post_list  %}
                     <div class="row profile-body">
                         <div class="col-md-8 col-xl-6 middle-wrapper">
                             <div class="row">
@@ -85,137 +136,62 @@
                         </div>
                     </div>
                     {% endfor %}
-                    </div>
-                </div>
-                <!-- Only show posts from the user's followers -->
-                <div class="tab-pane fade" id="pills-foryou" role="tabpanel" aria-labelledby="pills-foryou-tab">
-                    {% for post in post_list %}
-                    <div class="row justify-content-center mt-3">
-                        <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                            <div>
-                                <a href="{% url 'profile' post.author.profile.pk %}"></a>
-                                <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
-                                <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
-                            </div>
-                            <div class="position-relative">
-                                <p>{{ post.body }}</p>
-                                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
-                            </div>
-                            <div class="d-flex flex-row">
-                                <div>
-                                    <i class="fas fa-comment-dots"></i>
-                                    {{ post.comments.count }}
-                                </div> 
-                                <form method="POST" action="{% url 'like' post.pk %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{{ request.path }}">
-                                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
-                                        <!-- Show different like icon depending on if the user liked or not -->
-                                        {% if is_like == true %}
-                                        <i class="fas fa-heart" style="color: #a83f39"></i>
-                                        {% else %}
-                                        <i class="far fa-heart" style="color: #a83f39"></i>
-                                        {% endif %}
-                                        <span>{{ post.likes.all.count }}</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
                 </div>
                 <!-- Show trending posts (top 10 liked) -->
                 <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab">
-                    {% for post in trendingposts %}
-                    <div class="row justify-content-center mt-3">
-                        <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                            <div>
-                                <a href="{% url 'profile' post.author.profile.pk %}"></a>
-                                <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}"/>
-                                <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
-                            </div>
-                            <div class="position-relative">
-                                <p>{{ post.body }}</p>
-                                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
-                            </div>
-                            <div class="d-flex flex-row">
-                                <div>
-                                    <i class="fas fa-comment-dots"></i>
-                                    {{ post.comments.count }}
-                                </div> 
-                                <form method="POST" action="{% url 'like' post.pk %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{{ request.path }}">
-                                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
-                                        <!-- Show different like icon depending on if the user liked or not -->
-                                        {% if is_like == true %}
-                                        <i class="fas fa-heart" style="color: #a83f39"></i>
-                                        {% else %}
-                                        <i class="far fa-heart" style="color: #a83f39"></i>
-                                        {% endif %}
-                                        <span>{{ post.likes.all.count }}</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        
-    </div>
-    <!-- ex
-    <div class="profile-page tx-13">
-        <div class="row profile-body">
-            <div class="col-md-8 col-xl-6 middle-wrapper">
-                <div class="row">
-                    {% for post in allposts  %}
-                            <div class="col-md-12 grid-margin">
-                                <div class="card rounded">
-                                    <div class="card-header">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
-                                                <div class="ml-2">
-                                                    <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
-                                                    <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                    {% for post in trendingposts  %}
+                    <div class="row profile-body">
+                        <div class="col-md-8 col-xl-6 middle-wrapper">
+                            <div class="row">
+                                        <div class="col-md-12 grid-margin">
+                                            <div class="card rounded">
+                                                <div class="card-header">
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                                            <div class="ml-2">
+                                                                <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
+                                                                <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <div class="card-body">
+                                                    <div class="position-relative">
+                                                        <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                        <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <div class="d-flex post-actions">
+                                                        <div>
+                                                            <i class="fas fa-comment-dots"></i>
+                                                            {{ post.comments.count }}
+                                                        </div> 
+                                                        <form method="POST" action="{% url 'like' post.pk %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                                        <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                                        <!-- Show different like icon depending on if the user liked or not -->
+                                                        {% if is_like == true %}
+                                                        <i class="fas fa-heart" style="color: #a83f39"></i>
+                                                        {% else %}
+                                                        <i class="far fa-heart" style="color: #a83f39"></i>
+                                                        {% endif %}
+                                                        <span>{{ post.likes.all.count }}</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="position-relative">
-                                            <p class="mb-3 tx-14">{{ post.body }}</p>
-                                            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="d-flex post-actions">
-                                            <div>
-                                                <i class="fas fa-comment-dots"></i>
-                                                {{ post.comments.count }}
-                                            </div> 
-                                            <form method="POST" action="{% url 'like' post.pk %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="next" value="{{ request.path }}">
-                                            <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
-                                            {% if is_like == true %}
-                                            <i class="fas fa-heart" style="color: #a83f39"></i>
-                                            {% else %}
-                                            <i class="far fa-heart" style="color: #a83f39"></i>
-                                            {% endif %}
-                                            <span>{{ post.likes.all.count }}</span>
-                                        </button>
-                                    </form>
                                 </div>
-                            </div>
+                                
+                                </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
             </div>
-        </div>
     </div>
--->
 </div>
 {% endblock content %}
