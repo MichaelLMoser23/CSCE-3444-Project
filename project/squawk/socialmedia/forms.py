@@ -6,7 +6,9 @@ class PostForm(forms.ModelForm):
         label='',
         widget=forms.Textarea(attrs={
             'rows': '3',
-            'placeholder': 'What\'s happening?'
+            'placeholder': 'What\'s happening?',
+            'maxlength': '500',
+            'style': 'resize:none;',
         })
     )
 
@@ -19,7 +21,8 @@ class CommentForm(forms.ModelForm):
         label='',
         widget=forms.Textarea(attrs={
             'rows': '3',
-            'placeholder': 'Leave a comment'
+            'placeholder': 'Leave a comment',
+            'style': 'resize:none;',
         })
     )
 
