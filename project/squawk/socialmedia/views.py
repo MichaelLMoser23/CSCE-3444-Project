@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.db.models import Q, Count
@@ -5,9 +6,14 @@ from django.urls import reverse_lazy
 from django.urls.base import reverse
 from django.http import HttpResponseRedirect
 from django.views import View
-from .models import Post, Comment, UserProfile
+from .models import Post, Comment, UserProfile, Setting
+from django.contrib.auth.models import User
 from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
+import json
+
+from .serializers import UserSerailizer
+
 
 # Create your views here.
 class PostListView(LoginRequiredMixin, View):
@@ -35,7 +41,7 @@ class PostListView(LoginRequiredMixin, View):
         posts = Post.objects.filter(author__profile__followers__in=[user.id]).order_by('-date_posted')
         allposts = Post.objects.all().order_by('-date_posted')
         trendingposts = Post.objects.all().order_by('-likes')[:3]
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
             new_post = form.save(commit=False)
@@ -99,7 +105,7 @@ class PostDetailView(LoginRequiredMixin, View):
 
 class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['body']
+    fields = ['body', 'image']
     template_name = 'socialmedia\post_edit.html'
 
     def get_success_url(self):
@@ -110,6 +116,10 @@ class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         return self.request.user == post.author
         
+def Delete_Post(request, pk):
+    post = Post.objects.filter(pk=pk)
+    post.delete()
+    return redirect('post-list')
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -119,6 +129,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+        
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
@@ -179,6 +190,7 @@ class UserSettingsView(View):
     def get(self, request, pk):
         profile = UserProfile.objects.get(pk=pk)
         user = profile.user
+        
 
         context = {
             'user' : user,
@@ -253,3 +265,47 @@ class LikePost(LoginRequiredMixin, View):
 
         next = request.POST.get('next', '/')
         return HttpResponseRedirect(next, context)
+
+class LikeComment(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        comment = Comment.objects.get(pk=pk)
+        is_like = False
+        fill = "fas"
+
+        for like in comment.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like: 
+            comment.likes.add(request.user)
+        
+        if is_like:
+            comment.likes.remove(request.user)
+        
+        context = {
+            'fill': fill,
+        }
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next, context)
+
+# Change light/dark mode
+def userSettings(request):
+	user, created = User.objects.get_or_create(id=1)
+	setting = user.setting
+
+	seralizer = UserSerailizer(setting, many=False)
+
+	return JsonResponse(seralizer.data, safe=False)
+
+
+def updateTheme(request):
+	data = json.loads(request.body)
+	theme = data['theme']
+	
+	user, created = User.objects.get_or_create(id=1)
+	user.setting.value = theme
+	user.setting.save()
+	print('Request:', theme)
+	return JsonResponse('Updated..', safe=False)

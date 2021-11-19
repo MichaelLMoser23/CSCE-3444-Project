@@ -16,10 +16,10 @@
                 <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.date_posted }}</p>
             </div>
                 {% if request.user == post.author %}
-                    <a href="{% url 'post-edit' post.pk %}" style="color: #333;"><i class="far fa-edit"></i> Edit</a>
-                    <a href="{% url 'post-delete' post.pk %}" style="color: #333;"><i class="fas fa-trash"></i> Delete</a>
+                    <!--  Edit Button -->
+                    <a href="{% url 'post-edit' post.pk %}" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Edit Post" style="float: right"><i class="far fa-edit"></i></a>
                     <!--  Trigger  delete modal -->
-                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                    <button type="button" class="btn btn-outline-danger" style="float: right; margin-right: 5px" data-toggle="tooltip" data-placement="top" title="Delete Post" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                         <i class="fas fa-trash"></i>
                     </button>
                     <!-- Delete Modal -->
@@ -34,16 +34,16 @@
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <form method="POST" action="{% url 'post-delete' post.pk %}">
-                                    {% csrf_token %}
-                                    <button type="button" class="btn btn-danger" value="DELETE">Delete</button>
-                                </form>
+                            <a class="btn btn-danger" href="{% url 'delete-post' post.pk %}">Delete It</a>
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 {% endif %}
-            <p>{{ post.body }}</p>
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="post-image" />
+            {% endif %}
+            <p class="post-text">{{ post.body }}</p>
         </div>
     </div>
     <div class="row justify-content-center mt-3">
@@ -52,7 +52,7 @@
                 {% csrf_token %}
                 {{ form | crispy }}
                 <div class="d-grid gap-2">
-                    <button class="btn btn-success mt-3 mb-5">Submit</button>
+                    <button class="btn btn-primary mt-3 mb-5">Submit</button>
                 </div>
             </form>
         </div>

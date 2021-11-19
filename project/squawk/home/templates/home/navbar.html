@@ -1,17 +1,6 @@
 <div class="nav-container">
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-success">
     <div class="container-fluid">
-      <!--
-      <a class="navbar-brand" 
-      {% if user.is_authenticated %}
-      href="{% url 'post-list' %}">
-      <i class="fas fa-dove"></i> <strong>UNT</strong>
-      {% else %}
-      href="{% url 'index' %}"
-      <i class="fas fa-dove"></i> <strong>Home</strong>
-      {% endif %}
-      </a>
-      -->
       {% if user.is_authenticated %}
       <a class="navbar-brand" href="{% url 'profile' request.user.profile.pk %}"><i class="fas fa-dove"></i></a>
       {% else %}
@@ -28,6 +17,12 @@
           {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'explore' %}"><i class="fas fa-globe"></i> Explore</a>
+          </li>
+          {% endif %}
+          <!-- Show admin site for the admin -->
+          {% if user.username == "admin" %}
+          <li class="nav-item">
+            <a class="nav-link" href="http://127.0.0.1:8000/admin/"><i class="fas fa-user-shield"></i> Manage</a>
           </li>
           {% endif %}
           <!-- This is the navbar that is displayed to a user who is logged in -->
