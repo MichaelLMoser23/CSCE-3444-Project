@@ -17,12 +17,18 @@
                 <div>
                     <a href="{% url 'profile' profile.pk %}"></a>
                     <img class="rounded-circle post-img" height="30" width="30" src="{{ profile.picture.url }}"/>
-                    <p class="post-text">{{ post.author.name }}<a style="text-decoration: none" class="text-primary" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a></p>
                 </div>
-                {% if profile.major %}
-                    <p>{{ profile.major }}</p>
-                {% endif %}
-                <p>Followers: {{ profile.followers.all.count }}</p>
+                <div>
+                    <p class="post-text">{% if profile.name %}
+                        {{ profile.name }}
+                        {% endif %}
+                    <a style="text-decoration: none" class="text-primary" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a>
+                    <span class="post-text" style="float: right">Followers: {{ profile.followers.all.count }}</span>
+                    </p>
+                    {% if profile.major %}
+                        <p class="text-secondary">{{ profile.major }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     {% endfor %}

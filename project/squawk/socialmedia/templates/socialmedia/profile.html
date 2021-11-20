@@ -56,6 +56,11 @@
                             {% if request.user == user %}
                                 <div>   
                                     <a href="{% url 'profile-edit' profile.pk %}" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Edit Profile" style="float: right"><i class="far fa-edit"></i></a>
+                                      <!-- Generated markup by the plugin -->
+                                        <div class="tooltip bs-tooltip-top" role="tooltip">
+                                            <div class="arrow"></div>
+                                            <div class="tooltip-inner"></div>
+                                        </div>
                                 </div>
                                 {% endif %}
                         </div>
@@ -118,6 +123,9 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="position-relative">
+                                                {% if post.image %}
+                                                <img src="{{ post.image.url }}" class="post-image" />
+                                                {% endif %}
                                                 <p class="mb-3 tx-14">{{ post.body }}</p>
                                                 <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
                                             </div>

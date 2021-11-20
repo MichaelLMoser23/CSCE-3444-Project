@@ -12,34 +12,20 @@
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                       <a class="nav-item nav-link active" id="nav-settings-tab" data-bs-toggle="tab" href="#nav-settings" role="tab" aria-controls="nav-settings" aria-selected="true">Profile</a>
                       <a class="nav-item nav-link" id="nav-themes-tab" data-bs-toggle="tab" href="#nav-themes" role="tab" aria-controls="nav-themes" aria-selected="false">Themes</a>
-                      <a class="nav-item nav-link disabled" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
+                      <a class="nav-item nav-link disabled" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Coming Soon...</a>
                     </div>
                   </nav>
                   <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-settings" role="tabpanel" aria-labelledby="nav-settings-tab">
                         <div class="col-md-5 col-sm-5 mt-2">
-                            <a href="{% url 'profile-edit' profile.pk %}" class="btn btn-success"><i class="fas fa-edit"></i> Edit Profile</a>
+                            <a href="{% url 'profile-edit' profile.pk %}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit Profile</a>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-themes" role="tabpanel" aria-labelledby="nav-themes-tab">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Dark Mode
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Light Mode
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                            <label class="form-check-label" for="flexRadioDefault2">
-                              Colorblind Mode
-                            </label>
-                        </div>
+                      <div class="mt-4">
+                        <button class="btn btn-light" onclick="swapStyles('lightstyle.css')">Light Mode</button>
+                        <button class="btn btn-dark" onclick="swapStyles('darkstyle.css')">Dark Mode</button>
+                    </div>
                     </div>
                     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
                   </div>

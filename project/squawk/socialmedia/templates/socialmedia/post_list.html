@@ -10,7 +10,7 @@
     </div>
     <div class="row justify-content-center mt-3">
         <div class="col-md-5 col-sm-12">
-            <form method="POST">
+            <form method="POST", enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
                 <div class="d-grid gap-2">
@@ -36,7 +36,7 @@
                 <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
                     {% for post in allposts  %}
                     <div class="row profile-body">
-                        <div class="col-md-8 col-xl-6 middle-wrapper">
+                        
                                         <div class="col-md-12 grid-margin">
                                             <div class="card rounded">
                                                 <div class="card-header">
@@ -52,6 +52,9 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="position-relative">
+                                                        {% if post.image %}
+                                                        <img src="{{ post.image.url }}" class="post-image" />
+                                                        {% endif %}
                                                         <p class="mb-3 tx-14">{{ post.body }}</p>
                                                         <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
                                                     </div>
@@ -79,7 +82,7 @@
                                         </div>
                                     </div>
                                 </div>  
-                        </div>
+                        
                     </div>
                     {% endfor %}
                 </div>
@@ -87,7 +90,6 @@
                 <div class="tab-pane fade" id="pills-foryou" role="tabpanel" aria-labelledby="pills-foryou-tab">
                     {% for post in post_list  %}
                     <div class="row profile-body">
-                        <div class="col-md-8 col-xl-6 middle-wrapper">
                             <div class="row">
                                         <div class="col-md-12 grid-margin">
                                             <div class="card rounded">
@@ -131,9 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 </div>
-                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -141,7 +141,6 @@
                 <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab">
                     {% for post in trendingposts  %}
                     <div class="row profile-body">
-                        <div class="col-md-8 col-xl-6 middle-wrapper">
                             <div class="row">
                                         <div class="col-md-12 grid-margin">
                                             <div class="card rounded">
@@ -187,7 +186,6 @@
                                 </div>
                                 
                                 </div>
-                        </div>
                     </div>
                     {% endfor %}
                 </div>
