@@ -19,13 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-76h8(m5d)cz)_8gy*gv$(6dhj14%+%+#fo_l6t0g+!ww2l^nh4'
+SECRET_KEY = '245648392765&^(*&^76895%*%67575678%*&^%*&^%9860987565345$&)_89^&^$&021317264124'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+SECURE_HSTS_SECONDS = 31536000
 
 # Application definition
 
@@ -153,4 +154,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'post-list'
 
 ACCOUNT_EMAIL_REQUIRED = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
