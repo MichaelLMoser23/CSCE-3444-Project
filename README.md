@@ -1,3 +1,5 @@
+The project is hosted on https://hnguyen1276.pythonanywhere.com/  
+
 Some documentation:
 
 On the explore page, or social feed, we display 3 different tabs:  
