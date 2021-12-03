@@ -1,6 +1,27 @@
 {% extends 'home/base.html' %}
 {% load crispy_forms_tags %}
 
+<!-- This script allows users to stay on the same tab when page refreshes 
+<script>
+    $(document).ready( function() {
+
+        // Save last active tab to sessionStorage
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function () {
+            try {
+                sessionStorage.setItem('lastTab', $(this).attr('href'));
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Get last active tab from sesssionStorage and go there
+        var lastTab = sessionStorage.getItem('lastTab');
+        if (lastTab) {
+            $('[href="' + lastTab + '"]').tab('show');
+        }
+    });
+</script>
+-->
 {% block content %}
 <div class="container">
     <div class="row justify-content-center mt-3">
@@ -36,7 +57,6 @@
                 <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
                     {% for post in allposts  %}
                     <div class="row profile-body">
-                        
                                         <div class="col-md-12 grid-margin">
                                             <div class="card rounded">
                                                 <div class="card-header">
@@ -44,8 +64,8 @@
                                                         <div class="d-flex align-items-center">
                                                             <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
                                                             <div class="ml-2">
-                                                                <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
-                                                                <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                                <p ><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
+                                                                <p class="post-text">{{ post.date_posted }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -55,29 +75,29 @@
                                                         {% if post.image %}
                                                         <img src="{{ post.image.url }}" class="post-image" />
                                                         {% endif %}
-                                                        <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                        <p class="post-text">{{ post.body }}</p>
                                                         <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
                                                     <div class="d-flex post-actions">
-                                                        <div>
+                                                        <div class="">
                                                             <i class="fas fa-comment-dots"></i>
                                                             {{ post.comments.count }}
                                                         </div> 
                                                         <form method="POST" action="{% url 'like' post.pk %}">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="next" value="{{ request.path }}">
-                                                        <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
-                                                        <!-- Show different like icon depending on if the user liked or not -->
-                                                        {% if is_like == true %}
-                                                        <i class="fas fa-heart" style="color: #a83f39"></i>
-                                                        {% else %}
-                                                        <i class="far fa-heart" style="color: #a83f39"></i>
-                                                        {% endif %}
-                                                        <span>{{ post.likes.all.count }}</span>
-                                                    </button>
-                                                </form>
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                                            <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                                                <!-- Show different like icon depending on if the user liked or not -->
+                                                                {% if is_like == true %}
+                                                                <i class="fas fa-heart" style="color: #a83f39"></i>
+                                                                {% else %}
+                                                                <i class="far fa-heart" style="color: #a83f39"></i>
+                                                                {% endif %}
+                                                                <span class="post-text">{{ post.likes.all.count }}</span>
+                                                            </button>
+                                                        </form>
                                             </div>
                                         </div>
                                     </div>
@@ -99,20 +119,20 @@
                                                             <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
                                                             <div class="ml-2">
                                                                 <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
-                                                                <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                                <p class="post-text" class="tx-11 text-muted">{{ post.date_posted }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="position-relative">
-                                                        <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                        <p class="post-text">{{ post.body }}</p>
                                                         <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
                                                     <div class="d-flex post-actions">
-                                                        <div>
+                                                        <div class="">
                                                             <i class="fas fa-comment-dots"></i>
                                                             {{ post.comments.count }}
                                                         </div> 
@@ -126,7 +146,7 @@
                                                         {% else %}
                                                         <i class="far fa-heart" style="color: #a83f39"></i>
                                                         {% endif %}
-                                                        <span>{{ post.likes.all.count }}</span>
+                                                        <span class="post-text">{{ post.likes.all.count }}</span>
                                                     </button>
                                                 </form>
                                             </div>
@@ -150,20 +170,20 @@
                                                             <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
                                                             <div class="ml-2">
                                                                 <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a></p>
-                                                                <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                                <p class="post-text">{{ post.date_posted }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="position-relative">
-                                                        <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                        <p class="post-text">{{ post.body }}</p>
                                                         <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
                                                     <div class="d-flex post-actions">
-                                                        <div>
+                                                        <div class="">
                                                             <i class="fas fa-comment-dots"></i>
                                                             {{ post.comments.count }}
                                                         </div> 
@@ -177,7 +197,7 @@
                                                         {% else %}
                                                         <i class="far fa-heart" style="color: #a83f39"></i>
                                                         {% endif %}
-                                                        <span>{{ post.likes.all.count }}</span>
+                                                        <span class="post-text">{{ post.likes.all.count }}</span>
                                                     </button>
                                                 </form>
                                             </div>

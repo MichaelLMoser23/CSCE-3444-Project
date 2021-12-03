@@ -3,56 +3,38 @@
 
 {% block content %}
 <main>
-    {% if user.is_authenticated %}
-    <div class="col-md-10 col-sm-12 text-center">
-        <h1 class="display-2 mt-3">Welcome {{ user.username }} </h1>
-        <p class="mt-3 lead">You are currently logged in.</p>
+  {% if user.is_authenticated %}
+  <div class="col-md-10 col-sm-12 text-center">
+      <h1 class="display-2 mt-3">Welcome {{ user.username }} </h1>
+      <p class="mt-3 lead">You are currently logged in.</p>
+  </div>
+  {% else %}
+  <div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+      <i style=" color:#198754" class="fas fa-dove"></i>
+      <h1 class="display-5 fw-bold">Squawk</h1>
+      
+      <p class="col-md-8 fs-4">A social media app built by UNT students, for UNT students.</p>
+      <a class="btn btn-primary btn-lg" href="{% url 'account_login' %}">Log in</a>
     </div>
-    {% else %}
-    <section class="py-5 text-center container">
-      <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="fw-light">Squawk</h1>
-          <p class="lead text-muted">A social media app built by UNT students, for UNT students.</p>
-          <div>
-            <a href="{% url 'account_login' %}" class="btn btn-success my-2">Log in</a>
-          </div>
-          <a href="{% url 'account_signup' %}" class="btn btn-link">Don't have an account? Sign up here.</a>
-        </div>
-      </div>
-    </section>
-    {% endif %}
-    <div class="album py-5 bg-light">
-      <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          <div class="col">
-            <div class="card shadow-sm">
-              <img class="bd-placeholder-img card-img-top" src="/media/uploads/backgrounds/welcome.jpg" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em"></text></img>
-              <div class="card-body">
-                <p class="card-text">Explore...</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card shadow-sm">
-              <img class="bd-placeholder-img card-img-top" src="/media/uploads/backgrounds/connect.jpg" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em"></text></img>
-              <div class="card-body">
-                <p class="card-text">Connect...</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card shadow-sm">
-              <img class="bd-placeholder-img card-img-top" src="/media/uploads/backgrounds/people.jpg" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em"></text></img>
-  
-              <div class="card-body">
-                <p class="card-text">Share...</p>
-              </div>
-            </div>
-          </div>
-        </div>
+  </div>
+  {% endif %}
+  <div class="row align-items-md-stretch">
+    <div class="col-md-6">
+      <div class="h-100 p-5 text-white bg-success rounded-3">
+        <h2>Explore</h2>
+        <p>Connect with your friends, share whats on your mind, and see what everyone is saying!</p>
+        <a class="btn btn-outline-light btn-lg" href="{% url 'explore' %}">Explore</a>
       </div>
     </div>
+    <div class="col-md-6">
+      <div class="h-100 p-5 bg-light border rounded-3">
+        <h2>Sign up</h2>
+        <p>Don't have an account yet? Sign up and join the squawk experience!</p>
+        <a class="btn btn-outline-secondary btn-lg" href="{% url 'account_signup' %}">Sign up</a>
+      </div>
+    </div>
+  </div>  
 </main>
 
 {% endblock content %}

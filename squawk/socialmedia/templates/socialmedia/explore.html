@@ -32,7 +32,7 @@
                                       <div class="d-flex align-items-center">
                                         <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
                                           <div class="ml-2">
-                                            <p><a style="text-decoration: none" class="text-primary" href="">@{{ post.author }}</a></p>
+                                            <p><a style="text-decoration: none" class="text-primary">@{{ post.author }}</a></p>
                                             <p class="tx-11 text-muted">{{ post.date_posted }}</p>
                                           </div>
                                         </div>
@@ -72,8 +72,8 @@
                         Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
                       </div>
                       <div class="modal-footer">
-                        <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
-                        <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                        <a href="{% url 'account_login' %}" class="btn btn-primary">Log In</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
                       </div>
                     </div>
                   </div>
@@ -131,8 +131,8 @@
                         Log in to Sqawk to join the experience! Or if you don't have an account yet, sign up!
                       </div>
                       <div class="modal-footer">
-                        <a href="{% url 'account_login' %}" class="btn btn-success">Log In</a>
-                        <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                        <a href="{% url 'account_login' %}" class="btn btn-primary">Log In</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
                       </div>
                     </div>
                   </div>

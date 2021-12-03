@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,6 +117,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Bootstrap message styles
+MESSAGE_TAGS = {
+        messages.ERROR: 'alert-primary',
+        messages.ERROR: 'alert-light',
+        messages.ERROR: 'alert-dark',
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+ }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

@@ -55,6 +55,22 @@ body {
     margin: auto;
 }
 
+.profile-page .profile-header .cover-body li {
+    display: inline-block;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.profile-page .profile-header .cover-body li .counter {
+    color: #2c304d;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+.profile-page .profile-header li .heading {
+    color: #aea9c3;
+    font-size: 1rem;
+}
+
 /* Example */
 
 
@@ -190,17 +206,7 @@ body{
     border-radius: 0 0 .25rem .25rem;
 }
 
-.profile-page .profile-header .header-links ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
 
-.profile-page .profile-header .header-links ul li a {
-    color: #000;
-    -webkit-transition: all .2s ease;
-    transition: all .2s ease;
-}
 
 .profile-page .profile-header .header-links ul li:hover,
 .profile-page .profile-header .header-links ul li.active {

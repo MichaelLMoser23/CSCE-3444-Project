@@ -20,9 +20,25 @@
                                     @{{ user.username }}
                                     {% endif %}
                                 </span>
-                                <a class="link-secondary pt-1px d-none d-md-block mt-3" href="{% url 'followers' user.profile.pk %} ">Followers: <span class="text-muted tx-12">{{ follower_count }}</span></a>
+                                
                             </div>
+                            <ul style="list-style: none;">
+                                <li>
+                                    <div class="counter">{{ follower_count }}</div>
+                                    <div class="heading">Followers</div>
+                                </li>
+                                <li>
+                                    <div class="counter">{{ following_count }}</div>
+                                    <div class="heading">Following</div>
+                                </li>
+                                <li>
+                                    <div class="counter">{{ likes.count }}</div>
+                                    <div class="heading">Likes</div>
+                                </li>
+                            </ul>
+                            <div style="color:#aea9c3"><span style="color:#2c304d" class="tx-12"></span></div>
                             <div class="d-none d-md-block">
+                                <!-- If the user profile is the user itself, dont show the follow/block button -->
                                     {% if user == request.user %}
                                     {% else %}
                                     {% if is_following %}
@@ -30,10 +46,23 @@
                                         {% csrf_token %}
                                         <button class="btn btn-outline-danger btn-block btn-lg btn-block" type="submit">Unfollow</button>
                                     </form>
+                                    
                                     {% else %}
                                     <form method="POST" action="{% url 'add-follower' profile.pk %}">
                                         {% csrf_token %}
                                         <button class="btn btn-outline-primary btn-lg btn-block" type="submit">Follow</button>
+                                    </form>
+                                    {% endif %}
+                                    <!-- If the user is blocked, show the unblock button -->
+                                    {% if is_blocked %}
+                                    <form method="POST" action="{% url 'unblock-user' profile.pk %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Unblock</button>
+                                    </form>
+                                    {% else %}
+                                    <form method="POST" action="{% url 'block-user' profile.pk %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger btn-lg btn-block" type="submit">Block</button>
                                     </form>
                                     {% endif %}
                                     {% endif %}
@@ -94,15 +123,15 @@
                                 <li class="nav-item" role="presentation">
                                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">{{ posts.count }} Posts</button>
                                </li>
+                               {% if user == request.user %}
                                <li class="nav-item" role="presentation">
-                               <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Replies</button>
+                               <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="fas fa-heart"></i> Liked</button>
                                </li>
+                               {% else %}
                                <li class="nav-item" role="presentation">
-                               <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Likes</button>
-                               </li>
-                                <li class="nav-item" role="media">
-                                    <button class="nav-link" id="pills-media-tab" data-bs-toggle="pill" data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media" aria-selected="false">Media</button>
-                               </li>
+                                <button class="nav-link disabled" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i class="fas fa-lock"></i> Liked</button>
+                                </li>
+                               {% endif %}
                            </ul>
                            <div class="tab-content" id="pills-tabContent">
                                <!-- Show user posts -->
@@ -126,7 +155,7 @@
                                                 {% if post.image %}
                                                 <img src="{{ post.image.url }}" class="post-image" />
                                                 {% endif %}
-                                                <p class="mb-3 tx-14">{{ post.body }}</p>
+                                                <p class="post-text">{{ post.body }}</p>
                                                 <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
                                             </div>
                                         </div>
@@ -155,12 +184,58 @@
                                 </div>
                                 {% endfor %}
                                </div>
-                                <!-- Show user replies -->
-                               <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Replies</div>
                                <!-- Show all the posts that the user liked -->
-                               <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Likes</div>
-                               <!-- Show media shared by user -->
-                               <div class="tab-pane fade" id="pills-media" role="tabpanel" aria-labelledby="pills-media-tab">Media</div>
+                               <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                                {% if user == request.user %}
+                                {% for post in liked_posts %}
+                                <div class="col-md-12 grid-margin">
+                                    <div class="card rounded">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <img class="img-xs rounded-circle" src="{{ post.author.profile.picture.url }}" alt="">
+                                                    <div class="ml-2">
+                                                        <p>@{{ post.author }}</p>
+                                                        <p class="tx-11 text-muted">{{ post.date_posted }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="position-relative">
+                                                {% if post.image %}
+                                                <img src="{{ post.image.url }}" class="post-image" />
+                                                {% endif %}
+                                                <p class="post-text">{{ post.body }}</p>
+                                                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="d-flex post-actions">
+                                                <div>
+                                                    <i class="fas fa-comment-dots"></i>
+                                                    {{ post.comments.count }}
+                                                </div> 
+                                                <form method="POST" action="{% url 'like' post.pk %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                                    <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+                                                        <!-- Show different like icon depending on if the user liked or not -->
+                                                        {% if is_like == true %}
+                                                        <i class="fas fa-heart" style="color: #a83f39"></i>
+                                                        {% else %}
+                                                        <i class="far fa-heart" style="color: #a83f39"></i>
+                                                        {% endif %}
+                                                        <span>{{ post.likes.all.count }}</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                </div>
                            </div>
                         </div>
                     </div>
@@ -174,9 +249,9 @@
                         <div class="card rounded">
                             <div class="card-body">
                                 {% if profile.name %}
-                                <h6 class="card-title">{{ profile.name }}'s Followers ({{ follower_count }})</h6>
+                                <h6 class="post-text">{{ profile.name }}'s Followers ({{ follower_count }})</h6>
                                 {% else %}
-                                <h6 class="card-title">{{ user.username }}'s Followers ({{ follower_count }})</h6>
+                                <h6 class="post-text">{{ user.username }}'s Followers ({{ follower_count }})</h6>
                                 {% endif %}
                                 <div class="latest-photos">
                                     <div class="row">

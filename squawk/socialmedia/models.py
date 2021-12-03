@@ -8,7 +8,7 @@ from django.core.validators import RegexValidator
 
 
 alphanumeric = RegexValidator(r'^[a-zA-Z ]*$', 'Only alphabetic characters are allowed.')
-# Create your models here.
+# This model is for posts
 class Post(models.Model):
     body = models.TextField()
     image = models.ImageField(upload_to='uploads/post_photos', blank=True, null=True)
@@ -16,6 +16,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
 
+#This model is for comments
 class Comment(models.Model):
     comment = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
@@ -23,7 +24,7 @@ class Comment(models.Model):
     post = models.ForeignKey('Post', related_name='comments', null=True, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, blank=True, related_name='comment_likes')
 
-
+# This model is for user profiles
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, verbose_name='user', related_name='profile', on_delete=models.CASCADE)
     name = models.CharField(max_length=30, blank=True, null=True)
@@ -35,6 +36,12 @@ class UserProfile(models.Model):
     picture = models.ImageField(upload_to='uploads/profile_pictures', default='uploads/profile_pictures/pfp_default.png', blank=True)
     followers = models.ManyToManyField(User, blank=True, related_name='followers')
 
+# This model is for blocked users
+class Blocked(models.Model):
+    user = models.ForeignKey(User, null=True, related_name="blocked_users", on_delete=models.CASCADE)
+    users = models.ManyToManyField(User, blank=True, related_name="blocked_by")
+
+# This model is for settings
 class Setting(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200)
@@ -43,6 +50,7 @@ class Setting(models.Model):
 	def __str__(self):
 		return self.name
 
+# This function allows the system to automatically create a user profile for user on registration using signals
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
