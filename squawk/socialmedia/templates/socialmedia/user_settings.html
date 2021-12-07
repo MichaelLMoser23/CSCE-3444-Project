@@ -1,35 +1,54 @@
 {% extends 'home/base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8 col-sm-12 px-5 pt-3">
-            <div class="col-md-5 col-sm-12 border-bottom">
-                <h1>User Settings</h1>
-            </div>
-            <div class="row mt-4">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                      <a class="nav-item nav-link active" id="nav-settings-tab" data-bs-toggle="tab" href="#nav-settings" role="tab" aria-controls="nav-settings" aria-selected="true">Profile</a>
-                      <a class="nav-item nav-link" id="nav-themes-tab" data-bs-toggle="tab" href="#nav-themes" role="tab" aria-controls="nav-themes" aria-selected="false">Themes</a>
-                      <a class="nav-item nav-link disabled" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Coming Soon...</a>
+<div class="container-md">
+    <div class="col-md-8 col-sm-12 px-5 pt-3">
+        <h2>Settings</h2>
+        <div class="settings-page">
+            <!-- User Settings -->
+            <div class="left-side">
+                <div class="card rounded">
+                    <div class="card-body">
+                        <h5>Profile</h5>
+                        <div class="border-bottom"></div>
+                        <a href="{% url 'profile-edit' user.id %}" class="btn btn-warning mt-2"><i class="fas fa-edit"></i> Edit Profile</a>
                     </div>
-                  </nav>
-                  <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-settings" role="tabpanel" aria-labelledby="nav-settings-tab">
-                        <div class="col-md-5 col-sm-5 mt-2">
-                            <a href="{% url 'profile-edit' user.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit Profile</a>
+                </div>
+            </div>
+            <!-- End User Settings-->
+            <!-- Themes -->
+            <div class="middle-side">
+                <div class="themed-grid-col">
+                    <div class="card rounded">
+                        <div class="card-body">
+                            <h5>Themes</h5>
+                            <div class="border-bottom mb-2"></div>
+                            <button class="btn btn-light" onclick="swapStyles('lightstyle.css')"><i class="fas fa-sun"></i> Light Mode</button>
+                            <button class="btn btn-dark" onclick="swapStyles('darkstyle.css')"><i class="fas fa-moon"></i> Dark Mode</button>
+                            <button class="btn btn-success" onclick="swapStyles('greenstyle.css')"><i class="fas fa-dove"></i> Mean Green</button>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-themes" role="tabpanel" aria-labelledby="nav-themes-tab">
-                      <div class="mt-4">
-                        <button class="btn btn-light" onclick="swapStyles('lightstyle.css')">Light Mode</button>
-                        <button class="btn btn-dark" onclick="swapStyles('darkstyle.css')">Dark Mode</button>
-                    </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
-                  </div>
+                </div>
             </div>
+            <!-- End Themes-->
+            <!-- Social Settings -->
+            <div class="right-side">
+                    <div class="card rounded">
+                        <div class="card-body">
+                            <h5>Social</h5>
+                            <div class="border-bottom mb-2"></div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked/>
+                                <label class="form-check-label" for="flexSwitchCheckChecked">Profanity Filter</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked2" checked/>
+                                <label class="form-check-label" for="flexSwitchCheckChecked2">Show blocked users posts</label>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <!-- End Social Settings-->
         </div>
     </div>
 </div>

@@ -1,35 +1,105 @@
 {% extends 'home/base.html' %}
 
 {% block content %}
+<div class="container">
     <div class="row mt-5">
         <div class="col-md-3 col-sm-6">
             <a href="{% url 'profile' profile.pk %}" class="btn btn-secondary">Back to Profile</a>
         </div>
     </div>
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-5 col-sm-12">
-            {% if user == request.user %}
-            <h3>Your Followers</h5>
-            {% else %}
-            <h3>{{ profile.user.username }}'s Followers</h5>
-            {% endif %}
-        </div>
-    </div>
-    <div class="friend-list">
-        <div class="row mt-5">
-            {% for follower in followers %}
-            <div class="col-md-4 col-sm-6">
-              <div class="friend-card">
-                  <div class="card-info">
-                    <a href="{% url 'profile' follower.profile.pk %}"><img class="rounded-circle post-img" height="60" width="60" src="{{ follower.profile.picture.url }}" /></a>
-                  <div class="friend-info">
-                  	<h5><a href="{% url 'profile' follower.profile.pk %}" class="post-link">@{{ follower.username }}</a></h5>
-                  	<p>{{ follower.major }}</p>
-                  </div>
+    <div class="profile-page tx-13">
+    <div class="row profile-body">
+        <!-- right start -->
+        <div class="d-none d-xl-block col-xl-3 mt-3 right-wrapper">
+            <div class="col-md-12 grid-margin">
+                <div class="col-md-12 grid-margin">
+                <div class="card rounded">
+                    <div class="card-body">
+                        <!-- Show who user is following -->
+                        <h6>You're following ({{ following.count }}):</h6>
+                            <div class="latest-photos">
+                            <div class="row">
+                                {% for person in following %}
+                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                <div class="d-flex align-items-center hover-pointer">
+                                <img class="img-xs rounded-circle" src="{{ person.user.profile.picture.url }}" alt="">
+                                    <div class="ml-2">
+                                        <h6><a href="{% url 'profile' person.pk %}" class="post-link">@{{ person.user.username }}</a></h6>
+                                        {% if person.name %}
+                                        <p class="tx-11 text-muted">{{ person.name }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+             </div>
+         </div>
+        <!-- right end -->
+        <!-- left start -->
+            <div class="d-none d-md-block col-md-4 col-xl-3 mt-3 left-wrapper">
+                <!-- Show who user is blocking -->
+                <div class="card rounded">
+                    <div class="card-body">
+                    <h6>You're blocking ({{ blocked_users.count }}):</h6>
+                    <div class="latest-photos">
+                        <div class="row">
+                            {% for blocked in blocked_users %}
+                            <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                <div class="d-flex align-items-center hover-pointer">
+                                    <img class="img-xs rounded-circle" src="{{ blocked.user.profile.picture.url }}" alt="">
+                                        <div class="ml-2">
+                                            <h6><a href="{% url 'profile' blocked.pk %}" class="post-link">@{{ blocked.user.username }}</a></h6>
+                                            {% if blocked.name %}
+                                            <p class="tx-11 text-muted">{{ blocked.name }}</p>
+                                            {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            {% endfor %}
+            <!-- left end -->
+            <!-- middle start -->
+            <div class="col-md-8 col-xl-6 mt-3 middle-wrapper">
+                <div class="col-md-12 grid-margin">
+                        <!-- Show user followers -->
+                       <div class="col-md-6 grid-margin">
+                        <div class="card rounded">
+                        <div class="card-body">
+                            <h6>Your Followers ({{ followers.count }}):</h6>
+                            <div class="latest-photos">
+                            {% for follower in followers %}
+                                <div class="row">
+                                    <div class="d-flex justify-content-between mb-2 border-bottom">
+                                        <div class="d-flex align-items-center hover-pointer">
+                                            <a href="{% url 'profile' follower.profile.pk %}"><img class="rounded-circle post-img" height="60" width="60" src="{{ follower.profile.picture.url }}" /></a>
+                                                <div class="ml-2">
+                                                    <h6><a href="{% url 'profile' follower.profile.pk %}" class="post-link">@{{ follower.username }}</a></h6>
+                                                    {% if follower.profile.name %}
+                                                    <p class="tx-11 text-muted">{{ follower.profile.name }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- middle end -->
+        
+            </div>
         </div>
     </div>
 </div>

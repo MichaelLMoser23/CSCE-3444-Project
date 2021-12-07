@@ -32,7 +32,7 @@
                                     <div class="heading">Following</div>
                                 </li>
                                 <li>
-                                    <div class="counter">{{ likes.count }}</div>
+                                    <div class="counter">{{ likem.count }}</div>
                                     <div class="heading">Likes</div>
                                 </li>
                             </ul>
@@ -44,25 +44,24 @@
                                     {% if is_following %}
                                     <form method="POST" action="{% url 'remove-follower' profile.pk %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-outline-danger btn-block btn-lg btn-block" type="submit">Unfollow</button>
+                                        <button class="btn btn-outline-danger btn-block btn-lg btn-block" type="submit"><i class="fas fa-user-minus"></i> Unfollow</button>
                                     </form>
-                                    
                                     {% else %}
                                     <form method="POST" action="{% url 'add-follower' profile.pk %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-outline-primary btn-lg btn-block" type="submit">Follow</button>
+                                        <button class="btn btn-outline-primary btn-lg btn-block" type="submit"><i class="fas fa-user-plus"></i> Follow</button>
                                     </form>
                                     {% endif %}
                                     <!-- If the user is blocked, show the unblock button -->
                                     {% if is_blocked %}
                                     <form method="POST" action="{% url 'unblock-user' profile.pk %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Unblock</button>
+                                        <button class="btn btn-primary btn-lg btn-block mt-2" type="submit"><i class="fas fa-circle"></i> Unblock</button>
                                     </form>
                                     {% else %}
                                     <form method="POST" action="{% url 'block-user' profile.pk %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-danger btn-lg btn-block" type="submit">Block</button>
+                                        <button class="btn btn-danger btn-lg btn-block mt-2" type="submit"><i class="fas fa-ban"></i> Block</button>
                                     </form>
                                     {% endif %}
                                     {% endif %}

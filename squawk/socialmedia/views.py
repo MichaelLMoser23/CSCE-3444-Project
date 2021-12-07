@@ -20,9 +20,8 @@ from .serializers import UserSerailizer
 class PostListView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
-        #blocked_users = User.objects.filter().blocked_users.users.all()
-        posts = Post.objects.filter(author__profile__followers__in=[user.id]).order_by('-date_posted')
-        allposts = Post.objects.all().order_by('-date_posted')
+        posts = Post.objects.filter(Q(author__profile__followers__in=[user.id]) & ~Q(author__profile__blocked_users__in=[user.id])).order_by('-date_posted')
+        allposts = Post.objects.filter(~Q(author__profile__blocked_users__in=[user.id])).order_by('-date_posted')
         trendingposts = Post.objects.annotate(like_count=Count('likes')).order_by('-like_count')[:10]
         
         comments = Comment.objects.all().order_by('-date_posted')
@@ -164,14 +163,12 @@ class UserProfileView(View):
     def get(self, request, pk):
         profile = UserProfile.objects.get(pk=pk)
         user = profile.user
-        blocked_users = User.objects.get(username=request.user).blocked_users.all()
         post = Post.objects.filter(author=user).order_by('-date_posted')
-        all_posts = Post.objects.all().order_by('-date_posted')
         liked_posts = Post.objects.filter(likes__in=[user.id]).order_by('-date_posted')
-        likes = Post.objects.filter(likes__in=[user.id]).order_by('-date_posted')
+        likem = user.likes.all()
 
         followers = profile.followers.all()
-        following = User.objects.filter(followers__in=[user.id])
+        following = user.followers.all()
         if len(followers) == 0:
             is_following = False
             
@@ -183,7 +180,9 @@ class UserProfileView(View):
                 is_following = False
         follower_count = len(followers)
         following_count = len(following)
+
         # check if the profile is in the user's block list
+        blocked_users = profile.blocked_users.all()
         for blkUser in blocked_users:
             if blkUser == request.user:
                 is_blocked = True
@@ -195,7 +194,6 @@ class UserProfileView(View):
             'user' : user,
             'profile' : profile,
             'posts' : post,
-            'all_posts' : all_posts,
             'liked_posts' : liked_posts,
             'follower_count' : follower_count,
             'following_count' : following_count,
@@ -203,7 +201,7 @@ class UserProfileView(View):
             'followers' : followers,
             'following' : following,
             'is_blocked' : is_blocked,
-            'likes' : likes,
+            'likem' : likem,
         }
 
         return render(request, 'socialmedia\profile.html', context)
@@ -241,11 +239,15 @@ class FollowersView(View):
         profile = UserProfile.objects.get(pk=pk)
         user = profile.user
         followers = profile.followers.all()
+        following = user.followers.all()
+        blocked_users = user.blocked_users.all()
 
         context = {
             'profile': profile,
             'user' : user,
             'followers': followers,
+            'following': following,
+            'blocked_users': blocked_users,
         }
 
         return render(request, 'socialmedia/followers.html', context)
@@ -332,7 +334,7 @@ class LikeComment(LoginRequiredMixin, View):
 
 # Change light/dark mode
 def userSettings(request):
-	user = User.objects.get_or_create(id=1)
+	user, created = User.objects.get_or_create(id=1)
 	setting = user.setting
 
 	seralizer = UserSerailizer(setting, many=False)
@@ -344,7 +346,7 @@ def updateTheme(request):
 	data = json.loads(request.body)
 	theme = data['theme']
 	
-	user = User.objects.get_or_create(id=1)
+	user, created = User.objects.get_or_create(id=1)
 	user.setting.value = theme
 	user.setting.save()
 	print('Request:', theme)
@@ -354,13 +356,15 @@ def updateTheme(request):
 class BlockUser(LoginRequiredMixin, View):
     def post(self, request, pk):
         profile = UserProfile.objects.get(pk=pk)
-        request.user.blocked_users.add(profile.user)
+        profile.blocked_users.add(request.user)
 
+        messages.success(request, ("You are now blocking", profile.user.username))
         return redirect('profile', pk=profile.pk)
 
 class UnblockUser(LoginRequiredMixin, View):
     def post(self, request, pk):
         profile = UserProfile.objects.get(pk=pk)
-        request.user.blocked_users.remove(profile.user)
+        profile.blocked_users.remove(request.user)
 
+        messages.info(request, ("You have unblocked", profile.user.username))
         return redirect('profile', pk=profile.pk)

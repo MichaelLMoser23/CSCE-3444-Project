@@ -1,7 +1,7 @@
 {% extends 'home/base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="search-container">
     <div class="row justify-content-center mt-4">
         <div class="col-md-5 col-sm-12 border-bottom position-relative">
             {% if profile_list.count > 1 %}
@@ -11,26 +11,34 @@
             {% endif %}
         </div>
     </div>
+    <div class="row row-cols-1 row-cols-md-2">
+    
     {% for profile in profile_list %}
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                <div>
-                    <a href="{% url 'profile' profile.pk %}"></a>
-                    <img class="rounded-circle post-img" height="30" width="30" src="{{ profile.picture.url }}"/>
-                </div>
-                <div>
-                    <p class="post-text">{% if profile.name %}
-                        {{ profile.name }}
-                        {% endif %}
-                    <a style="text-decoration: none" class="text-primary" href="{% url 'profile' profile.pk %}">@{{ profile.user }}</a>
-                    <span class="post-text" style="float: right">Followers: {{ profile.followers.all.count }}</span>
-                    </p>
-                    {% if profile.major %}
-                        <p class="text-secondary">{{ profile.major }}</p>
+        <div class="search-card">
+            <div class="search-upper"> <img src="" style="color:#198754" class="img-fluid"> </div>
+            <div class="search-user text-center">
+                <div class="search-profile"> <img src="{{ profile.picture.url }}" class="rounded-circle" width="80"> </div>
+            </div>
+            <div class="mt-5 text-center">
+                <h4 class="mb-0">@{{ profile.user.username }}</h4> <span class="text-muted d-block mb-2">
+                    {% if profile.location %}
+                    {{ profile.location }}
                     {% endif %}
+                </span> <a style="text-decoration: none" class="btn btn-outline-primary search-follow" href="{% url 'profile' profile.pk %}"> Go to Profile</a>
+                <div class="d-flex justify-content-between align-items-center mt-4 px-4">
+                    <div class="search-stats">
+                        <h6 class="mb-0">Followers</h6> <span>{{ profile.followers.all.count }}</span>
+                    </div>
+                    <div class="search-stats">
+                        <h6 class="mb-0">Following</h6> <span>{{ profile.user.followers.all.count }}</span>
+                    </div>
+                    <div class="search-stats">
+                        <h6 class="mb-0">Likes</h6> <span>{{ profile.user.likes.count }}</span>
+                    </div>
                 </div>
             </div>
         </div>
     {% endfor %}
+    </div>
 </div>
 {%  endblock %}
